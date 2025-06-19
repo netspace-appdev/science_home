@@ -642,7 +642,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           primary: false,
                           itemCount: filteredCategories?.length,
                           itemBuilder: (BuildContext context, int index) {
-                             index_val =index;
+                            // index_val =index; //panc
                             return Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   10.0, 10.0, 10.0, 0.0),
@@ -698,39 +698,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(8.0),
-                                                      /*  child: (filteredCategories?[
-                                                                        index]
-                                                                    .productThumimage !=
-                                                                null)
-                                                            ? Image.network(
-                                                          BaseURl.basUrl+
-                                                                    (filteredCategories?[index]
-                                                                            .productThumimage ??
-                                                                        ''),
-                                                                height: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height *
-                                                                    0.23,
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    0.95,
-                                                                fit:
-                                                                    BoxFit.fill,
-                                                              )
-                                                            : Image.asset(
-                                                                'assets/images/image_5-removebg-preview.png',
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    0.9,
-                                                                height: 100.0,
-                                                                fit:
-                                                                    BoxFit.fill,
-                                                              ),*/
+
                                                         child: Stack(
                                                           children: [
                                                             // Product Image
@@ -739,7 +707,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                               child: (filteredCategories?[index].productThumimage != null)
                                                                   ? Image.network(
                                                                 BaseURl.basUrl + (filteredCategories?[index].productThumimage ?? ''),
-                                                                height: MediaQuery.of(context).size.height * 0.23,
+                                                                height: MediaQuery.of(context).size.height * 0.40,
                                                                 width: MediaQuery.of(context).size.width * 0.95,
                                                                 fit: BoxFit.fill,
                                                               )
@@ -910,9 +878,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                   ),
                                                   FFButtonWidget(
                                                     onPressed: () {
+                                                      index_val=index;//pancode
                                                       if (FFAppState().UserId == '') {
+                                                        print("this===>");
                                                         get_initiated_add_to_card();
                                                       } else {
+                                                        print("that===>");
                                                         call_add_to_cart(index);
                                                       }
                                                     },
@@ -990,9 +961,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         );
 
         // Check the response status
-        if (response.statusCode == 200) {
+        if (response.statusCode == 200 || response.statusCode == 201) {
           print("Data sent successfully: ${response.body}");
-          ToastMessage.msg(response.statusCode.toString());
+          ToastMessage.msg("Product added to cart");
         } else {
           print("Failed to send data. Status code: ${response.statusCode}");
           print("Response: ${response.body}");

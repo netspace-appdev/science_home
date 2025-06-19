@@ -1,5 +1,11 @@
 
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:lottie/lottie.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:school_home/flutter_flow/backend/app_state.dart';
 import 'package:school_home/pages/add_to_card/AddToCartResponse.dart';
 import 'package:school_home/pages/enquery_form/enquery_form_widget.dart';
@@ -378,6 +384,8 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                       if ((_model.addToCartResponse?.data?.isNotEmpty ?? false)) {
                         _showBottomSheet(context, _model.addToCartResponse?.data, totalMrp);
                       }
+                      //uncomment
+                    //  downloadPDF("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
                     },
                     child: Container(
                       height: 75,
@@ -407,6 +415,91 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
       ),
     );
   }
+/*  Future<void> downloadPDF(String url) async {
+    print("downloadPDF==>");
+    try {
+      // Request storage permission
+      var status = await Permission.storage.request();
+
+      print("status==>${status}");
+      if (!status.isGranted) {
+        print("Storage permission denied");
+        return;
+      }
+
+      // Get download directory
+      Directory? directory;
+      if (Platform.isAndroid) {
+        directory = await getExternalStorageDirectory();
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+
+      final filePath = "${directory!.path}/receipt.pdf";
+
+      Dio dio = Dio();
+      await dio.download(url, filePath);
+
+      print("PDF downloaded to: $filePath");
+      OpenFile.open(filePath);
+      // Optionally show a snackbar or toast
+      ToastMessage.msg("PDF downloaded successfully!");
+
+    } catch (e) {
+      print("Download error: $e");
+      ToastMessage.msg("Failed to download PDF");
+    }
+  }*/
+
+
+  Future<void> downloadPDF(String url) async {
+    print("downloadPDF==>");
+    try {
+      // Request storage permission
+      var status = await Permission.storage.request();
+
+      print("status ==> $status");
+      if (!status.isGranted) {
+        print("Storage permission denied");
+        ToastMessage.msg("Storage permission denied!");
+        return;
+      }
+
+      // Determine the directory
+      Directory? directory;
+      if (Platform.isAndroid) {
+        // Try to get the public Downloads directory
+        directory = Directory("/storage/emulated/0/Download");
+
+        // If it doesn't exist or can't be accessed, fallback
+        if (!await directory.exists()) {
+          print("Downloads folder not found. Falling back.");
+          directory = await getExternalStorageDirectory();
+        }
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+
+      if (directory == null) {
+        throw Exception("Unable to find a suitable directory to save file.");
+      }
+
+      final filePath = "${directory.path}/receipt.pdf";
+      Dio dio = Dio();
+      await dio.download(url, filePath);
+
+      print("PDF downloaded to: $filePath");
+      OpenFile.open(filePath);
+
+      ToastMessage.msg("PDF downloaded successfully!");
+
+    } catch (e) {
+      print("Download error: $e");
+      ToastMessage.msg("Failed to download PDF");
+    }
+  }
+
+
 
   void getall_addtocart_list() async{
 
@@ -477,7 +570,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                         },
                         text: 'Cancel',
                         options: FFButtonOptions(
-                          width: 146,
+                          width: 150,
                           height: 37,
                           padding: EdgeInsetsDirectional.fromSTEB(
                               24, 0, 24, 0),
@@ -524,7 +617,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                         },
                         text: 'Delete',
                         options: FFButtonOptions(
-                          width: 146,
+                          width: 150,
                           height: 37,
                           padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
                           iconPadding:
