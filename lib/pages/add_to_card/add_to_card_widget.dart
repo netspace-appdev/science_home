@@ -338,7 +338,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Subtotal',
+                                  'Total',
                                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'Inter',
                                     fontWeight: FontWeight.w600,
@@ -394,7 +394,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        'Total ₹${totalMrp.toStringAsFixed(2)}',
+                        'Download Estimation',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Inter',
                           color: FlutterFlowTheme.of(context).secondaryBackground,

@@ -160,224 +160,221 @@ class _AllproductlistState extends State<Allproductlist> {
             top: true,
             child:  _model.isLoaderActive == false ?
             Center(child: CircularProgressIndicator(color: FlutterFlowTheme.of(context).primary)):SingleChildScrollView(
-              child: Container(
-                  width: double.infinity,
-                   height: MediaQuery.of(context).size.height * 0.9, // 90% of the screen height
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    primary: false,
-                    itemCount: _model.productList?.data?.length??0,
-                    itemBuilder: (BuildContext context, int index) {
-                      index_val =index;
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                primary: false,
+                itemCount: _model.productList?.data?.length??0,
+                itemBuilder: (BuildContext context, int index) {
+                  index_val =index;
 
-                      return  Padding(
-                        padding:
-                        EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
-                        child: InkWell(
-                          onTap: (){
-                          //  context.pushNamed('ProductDetail');
-                            Helper.moveToScreenwithPush(context, ProductDetailWidget(
-                            _model.productList?.data?[index]?.productId??0,counters[index]
-                            ));
-                          },
-                          child: Card(
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            color: FlutterFlowTheme.of(context).secondaryBackground,
-                            elevation: 5.0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10.0 ,vertical: 10),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                  return  Padding(
+                    padding:
+                    EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
+                    child: InkWell(
+                      onTap: (){
+                      //  context.pushNamed('ProductDetail');
+                        Helper.moveToScreenwithPush(context, ProductDetailWidget(
+                        _model.productList?.data?[index]?.productId??0,counters[index]
+                        ));
+                      },
+                      child: Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                        elevation: 5.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0 ,vertical: 10),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Card(
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                     // color: FlutterFlowTheme.of(context).alternate,
+                                      elevation: 0.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                      ),
+                                      child: Padding(
+                                          padding: EdgeInsetsDirectional.symmetric(horizontal: 0.0, vertical: 0.0),
+                                          child: Center(
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              child:
+                                              (_model.productList?.data?[index].productThumimage!=null)
+                                                  ? Image.network(
+                                                BaseURl.basUrl+
+                                                    (_model.productList?.data?[index].productThumimage ?? ''),
+                                                height: MediaQuery.of(context).size.height * 0.40,
+                                                width: MediaQuery.of(context).size.width * 0.95,
+
+                                                fit: BoxFit.fill,
+
+                                              ):
+                                              Image.asset(
+                                                'assets/images/image_5-removebg-preview.png',
+                                                width: MediaQuery.of(context).size.width*0.7,
+                                                height: 100.0,
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          )
+
+                                      ),
+                                    ),
+                                    Text(
+                                      _model.productList?.data?[index]?.productTitle?.toString() ?? ''    ,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                        fontFamily: 'Inter',
+                                        fontSize: 16.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        Card(
-                                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                                         // color: FlutterFlowTheme.of(context).alternate,
-                                          elevation: 0.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8.0),
-                                          ),
-                                          child: Padding(
-                                              padding: EdgeInsetsDirectional.symmetric(horizontal: 0.0, vertical: 0.0),
-                                              child: Center(
-                                                child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(8.0),
-                                                  child:
-                                                  (_model.productList?.data?[index].productThumimage!=null)
-                                                      ? Image.network(
-                                                    BaseURl.basUrl+
-                                                        (_model.productList?.data?[index].productThumimage ?? ''),
-                                                    height:  MediaQuery.of(context).size.height*0.23,
-                                                    width: MediaQuery.of(context).size.width*0.95,
-                                                    fit: BoxFit.fill,
-
-                                                  ):
-                                                  Image.asset(
-                                                    'assets/images/image_5-removebg-preview.png',
-                                                    width: MediaQuery.of(context).size.width*0.7,
-                                                    height: 100.0,
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                ),
-                                              )
+                                        Text(
+                                          '₹ ${ _model.productList?.data?[index]?.priceMrp?.toString() ??""}',
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                              fontFamily: 'Inter',
+                                              color: FlutterFlowTheme.of(context).secondaryText,
+                                              letterSpacing: 0.0,
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w600
 
                                           ),
                                         ),
                                         Text(
-                                          _model.productList?.data?[index]?.productTitle?.toString() ?? ''    ,
+                                          _model.productList?.data?[index]?.priceMsp?.toString() ??"",
                                           style: FlutterFlowTheme.of(context)
                                               .bodyMedium
                                               .override(
                                             fontFamily: 'Inter',
-                                            fontSize: 16.0,
+                                            color: FlutterFlowTheme.of(context).secondaryText,
                                             letterSpacing: 0.0,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14.0,
+                                            decoration: TextDecoration.lineThrough,
                                           ),
                                         ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '₹ ${ _model.productList?.data?[index]?.priceMrp?.toString() ??""}',
-                                              style: FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .override(
-                                                  fontFamily: 'Inter',
-                                                  color: FlutterFlowTheme.of(context).secondaryText,
-                                                  letterSpacing: 0.0,
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.w600
+                                      ].divide(SizedBox(width: 5,)),
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
 
-                                              ),
-                                            ),
-                                            Text(
-                                              _model.productList?.data?[index]?.priceMsp?.toString() ??"",
-                                              style: FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .override(
-                                                fontFamily: 'Inter',
-                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                letterSpacing: 0.0,
-                                                fontSize: 14.0,
-                                                decoration: TextDecoration.lineThrough,
-                                              ),
-                                            ),
-                                          ].divide(SizedBox(width: 5,)),
-                                        ),
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                           children: [
-
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                // Decrease Button
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      if (counters[index] > 0) {
-                                                        counters[index]--; // Decrease value
-                                                      }
-                                                    });
-                                                  },
-                                                  child: Icon(
-                                                    Icons.arrow_drop_down_circle_outlined,
-                                                    color: FlutterFlowTheme.of(context).primaryColor,
-                                                    size: 33.0,
-                                                  ),
-                                                ),
-
-                                                // Counter Text
-                                                SizedBox(width: 8.0),
-                                                Text(
-                                                  '${counters[index]}', // Display counter for this item
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium
-                                                      ?.copyWith(
-                                                    fontFamily: 'Inter',
-                                                    letterSpacing: 0.0,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 8.0),
-
-                                                // Increase Button
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      counters[index]++; // Increase value
-                                                    });
-                                                  },
-                                                  child: Transform.rotate(
-                                                    angle: math.pi, // Rotate the icon 180 degrees
-                                                    child: Icon(
-                                                      Icons.arrow_drop_down_circle_outlined,
-                                                      color: FlutterFlowTheme.of(context).primaryColor,
-                                                      size: 33.0,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            FFButtonWidget(
-                                              onPressed: () {
-                                                if (FFAppState().UserId == '') {
-                                                  get_initiated_add_to_card();
-                                                } else {
-                                                  call_add_to_cart(index);
-                                                }
+                                            // Decrease Button
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (counters[index] > 0) {
+                                                    counters[index]--; // Decrease value
+                                                  }
+                                                });
                                               },
-                                              text: 'Add to card',
-                                              icon: Icon(
-                                                Icons.shopping_cart_outlined,
-                                                size: 15,
+                                              child: Icon(
+                                                Icons.arrow_drop_down_circle_outlined,
+                                                color: FlutterFlowTheme.of(context).primaryColor,
+                                                size: 33.0,
                                               ),
-                                              options: FFButtonOptions(
-                                                width:
-                                                MediaQuery.of(context).size.width * 0.30,
-                                                height: 35,
-                                                padding: EdgeInsetsDirectional.fromSTEB(
-                                                    0, 0, 0, 0),
-                                                iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                                    0, 0, 0, 0),
-                                                color: FlutterFlowTheme.of(context).primaryText,
-                                                textStyle: FlutterFlowTheme.of(context)
-                                                    .titleSmall
-                                                    .override(
-                                                  fontFamily: 'Inter',
-                                                  color: Colors.white,
-                                                  fontSize: 10,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w300,
+                                            ),
+
+                                            // Counter Text
+                                            SizedBox(width: 8.0),
+                                            Text(
+                                              '${counters[index]}', // Display counter for this item
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                fontFamily: 'Inter',
+                                                letterSpacing: 0.0,
+                                              ),
+                                            ),
+                                            SizedBox(width: 8.0),
+
+                                            // Increase Button
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  counters[index]++; // Increase value
+                                                });
+                                              },
+                                              child: Transform.rotate(
+                                                angle: math.pi, // Rotate the icon 180 degrees
+                                                child: Icon(
+                                                  Icons.arrow_drop_down_circle_outlined,
+                                                  color: FlutterFlowTheme.of(context).primaryColor,
+                                                  size: 33.0,
                                                 ),
-                                                elevation: 0,
-                                                borderRadius: BorderRadius.circular(8),
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
-                                      ].divide(SizedBox(height: 15.0)),
+                                        FFButtonWidget(
+                                          onPressed: () {
+                                            if (FFAppState().UserId == '') {
+                                              get_initiated_add_to_card();
+                                            } else {
+                                              call_add_to_cart(index);
+                                            }
+                                          },
+                                          text: 'Add to card',
+                                          icon: Icon(
+                                            Icons.shopping_cart_outlined,
+                                            size: 15,
+                                          ),
+                                          options: FFButtonOptions(
+                                            width:
+                                            MediaQuery.of(context).size.width * 0.30,
+                                            height: 35,
+                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                0, 0, 0, 0),
+                                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                                0, 0, 0, 0),
+                                            color: FlutterFlowTheme.of(context).primaryText,
+                                            textStyle: FlutterFlowTheme.of(context)
+                                                .titleSmall
+                                                .override(
+                                              fontFamily: 'Inter',
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              letterSpacing: 0.0,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                            elevation: 0,
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ),
+                                  ].divide(SizedBox(height: 15.0)),
                                 ),
-                              ].divide(SizedBox(width: 10.0)),
+                              ),
                             ),
-                          ),
+                          ].divide(SizedBox(width: 10.0)),
                         ),
-                      );
-                    },
-                  )
+                      ),
+                    ),
+                  );
+                },
               ),
 
             ),

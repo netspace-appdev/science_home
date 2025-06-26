@@ -145,7 +145,8 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                     padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
                     child: Container(
                       width: double.infinity,
-                      height: 250.0,
+                      // height: 250.0,
+                      height: MediaQuery.of(context).size.height * 0.40,
                       child: Stack(
                         children: [
                           PageView.builder(
@@ -161,14 +162,17 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderRadius: BorderRadius.circular(0.0),
                                     child: _model.productList?.data?.productImages?[index] != null
                                         ? Padding(
                                       padding: const EdgeInsets.only(right: 8.0),
                                       child: Image.network(
                                         BaseURl.basUrl+'${_model.productList?.data?.productImages?[index]}',
                                         width: double.infinity,
-                                        height:MediaQuery.of(context).size.height*0.23,
+                                       /* height:MediaQuery.of(context).size.height*0.23,*/
+                                        height: MediaQuery.of(context).size.height * 0.40,
+
+
                                         fit: BoxFit.fill,
                                       ),
                                     )

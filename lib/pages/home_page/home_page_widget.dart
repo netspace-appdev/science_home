@@ -79,10 +79,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
 
   void get_initiated_add_to_card() async {
-    setState(() {});
+  //  setState(() {});
     _model.isLoaderActive = false;
     _model.generateOrderId = await BaseUrlGroup.initiated_add_to_card.call();
-    setState(() {});
+ //   setState(() {});
     setState(() {
      // filteredCategories = _model.productList?.data ?? [];
       FFAppState().UserId=_model.generateOrderId?.orderid??'';
@@ -90,7 +90,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       call_add_to_cart(index_val!);
     });
     _model.isLoaderActive = true;
-    setState(() {});
+  //  setState(() {});
   }
 
   @override

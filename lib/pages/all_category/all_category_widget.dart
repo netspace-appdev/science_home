@@ -146,7 +146,7 @@ class _AllCategoryWidgetState extends State<AllCategoryWidget> {
                             ),
                       ),
                       Text(
-                        '(47)',
+                        '(${_model.homepageresponse?.data?.length??0})',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'Inter',
                               fontSize: 16.0,

@@ -166,6 +166,7 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
 
                 TextFormField(
                   controller: mobileController,
+                  maxLength: 10,
                   autofocus: false,
                   obscureText: false,
                   keyboardType: TextInputType.phone,

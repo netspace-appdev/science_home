@@ -206,8 +206,8 @@ class _AllproductState extends State<Allproduct> {
                                                     ? Image.network(
                                                   BaseURl.basUrl+
                                                       (_model.productList?.data?[index].productThumimage ?? ''),
-                                                  height:  MediaQuery.of(context).size.height*0.23,
-                                                  width: MediaQuery.of(context).size.width*0.95,
+                                                  height: MediaQuery.of(context).size.height * 0.40,
+                                                  width: MediaQuery.of(context).size.width * 0.95,
                                                   fit: BoxFit.fill,
 
                                                 ):
