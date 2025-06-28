@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:school_home/flutter_flow/backend/app_state.dart';
 import 'package:school_home/pages/AllProduct/AllProductModel.dart';
 import 'package:school_home/pages/SlideBar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../flutter_flow/backend/api_requests/api_calls.dart';
 import '../../flutter_flow/backend/api_requests/api_constants.dart';
 import '../constant.dart';
@@ -49,6 +51,30 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   }
 
+
+  Future<void> checkAndRequestStoragePermission() async {
+    final prefs = await SharedPreferences.getInstance();
+    final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
+
+    if (alreadyRequested) {
+      print("Storage permission already granted or handled.");
+      return;
+    }
+
+    var status = await Permission.storage.request();
+    print("Permission status: $status");
+
+    if (status.isGranted) {
+      await prefs.setBool('storage_permission_granted', true);
+      ToastMessage.msg("Storage permission granted.");
+    }else if (status.isPermanentlyDenied) {
+      openAppSettings(); // from `permission_handler`
+      ToastMessage.msg("Please enable storage permission from settings.");
+    } else {
+      ToastMessage.msg("Storage permission denied.");
+    }
+  }
+
   // Method to filter categories based on input
   void _filterCategories() {
     final query = _model.textController.text.toLowerCase();
@@ -74,7 +100,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     });
     _model.isLoaderActive = true;
     print('userID......${FFAppState().UserId}');
-
+    checkAndRequestStoragePermission();
     setState(() {});
   }
 
@@ -963,13 +989,38 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         // Check the response status
         if (response.statusCode == 200 || response.statusCode == 201) {
           print("Data sent successfully: ${response.body}");
-          ToastMessage.msg("Product added to cart");
+         // ToastMessage.msg("Product added to cart");
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Product added to cart"),
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
         } else {
           print("Failed to send data. Status code: ${response.statusCode}");
           print("Response: ${response.body}");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Failed to add to the cart"),
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+
+              ),
+            ),
+          );
         }
        // context.pushNamed('AddToCard');
-        ToastMessage.msg("Product added to cart");
+       // ToastMessage.msg("Product added to cart");
+
       } catch (e) {
         print("Error occurred: $e");
       }

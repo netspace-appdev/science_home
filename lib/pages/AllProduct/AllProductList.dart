@@ -409,14 +409,37 @@ class _AllproductlistState extends State<Allproductlist> {
       );
 
       // Check the response status
-      if (response.statusCode == 200) {
-        print("Data sent successfully: ${response.body}");
-        ToastMessage.msg(response.statusCode.toString());
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Data pankaj sent successfully: ${response.body}");
+        //ToastMessage.msg(response.statusCode.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Product added to cart"),
+            duration: Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.green,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
       } else {
         print("Failed to send data. Status code: ${response.statusCode}");
         print("Response: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Failed to add to the cart"),
+            duration: Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+
+            ),
+          ),
+        );
       }
-      context.pushNamed('AddToCard');
+
 
     } catch (e) {
       print("Error occurred: $e");
