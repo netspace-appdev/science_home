@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:school_home/flutter_flow/backend/app_state.dart';
 import 'package:school_home/pages/AllProduct/AllProductModel.dart';
@@ -46,7 +47,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     _model.textFieldFocusNode ??= FocusNode();
     _model.textController?.addListener(_filterCategories);
     print('userID......${FFAppState().UserId}');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('📥 Foreground Message: ${message.notification?.title}');
+      // You can show a snackbar or local notification here
+    });
 
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('🔁 App opened via notification tap');
+      // Navigate or show something specific
+    });
     apiCallHomepages();
 
   }

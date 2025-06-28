@@ -6,6 +6,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:school_home/flutter_flow/flutter_flow_util.dart';
 
 import '../flutter_flow/flutter_flow_theme.dart';
+import 'other_pages/contactus.dart';
+import 'other_pages/privacy_policy.dart';
+import 'other_pages/terms_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
@@ -159,43 +162,54 @@ class CustomDrawer extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(
-                            'assets/images/folder.svg',
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) =>  TermsScreen()),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(
+                              'assets/images/folder.svg',
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Terms & Conditions',
-                          style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Inter',
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontSize: 16,
-                            letterSpacing: 0.0,
+                          Text(
+                            'Terms & Conditions',
+                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Inter',
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize: 16,
+                              letterSpacing: 0.0,
+                            ),
                           ),
-                        ),
-                      ].divide(SizedBox(width: 20)),
-                    ),
-                    Icon(
-                      Icons.arrow_forward,
-                      color: FlutterFlowTheme.of(context).primaryText,
-                      size: 20,
-                    ),
-                  ],
+                        ].divide(SizedBox(width: 20)),
+                      ),
+                      Icon(
+                        Icons.arrow_forward,
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        size: 20,
+                      ),
+                    ],
+                  ),
                 ),
                 InkWell(
                   onTap: (){
-                    context.pushNamed('ContactUs');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) =>  ContactUsScreen()),
+                    );
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
@@ -215,6 +229,49 @@ class CustomDrawer extends StatelessWidget {
                           ),
                           Text(
                             'Contact Us',
+                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Inter',
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize: 16,
+                              letterSpacing: 0.0,
+                            ),
+                          ),
+                        ].divide(SizedBox(width: 20)),
+                      ),
+                      Icon(
+                        Icons.arrow_forward,
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ),
+
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) =>  PrivacyPolicyScreen()),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(
+                              'assets/images/edit.svg',
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Text(
+                            'Privacy Policy',
                             style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'Inter',
                               color: FlutterFlowTheme.of(context).primaryText,

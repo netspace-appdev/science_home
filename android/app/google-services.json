@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "673073877679",
+    "project_id": "sciencehomeapp",
+    "storage_bucket": "sciencehomeapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673073877679:android:bdd2fd7c8d0301f45c3a5a",
+        "android_client_info": {
+          "package_name": "com.mycompany.schoolhome"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXcPPBXX9sqsf0gI6Mh8jpaAAmZtZa2qM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
