@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:673073877679:android:bdd2fd7c8d0301f45c3a5a",
+        "mobilesdk_app_id": "1:673073877679:android:fc80da6aade378795c3a5a",
         "android_client_info": {
-          "package_name": "com.mycompany.schoolhome"
+          "package_name": "com.ns.sciencehome"
         }
       },
       "oauth_client": [],

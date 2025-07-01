@@ -1,4 +1,4 @@
-package com.mycompany.schoolhome
+package com.ns.sciencehome
 
 import io.flutter.embedding.android.FlutterActivity
 

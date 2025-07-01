@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCXcPPBXX9sqsf0gI6Mh8jpaAAmZtZa2qM',
-    appId: '1:673073877679:android:bdd2fd7c8d0301f45c3a5a',
+    appId: '1:673073877679:android:fc80da6aade378795c3a5a',
     messagingSenderId: '673073877679',
     projectId: 'sciencehomeapp',
     storageBucket: 'sciencehomeapp.firebasestorage.app',
@@ -59,10 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDpbFVq7Su8Z5J0n_3yFuZjup6XfKMwxCU',
-    appId: '1:673073877679:ios:cc930350409e4e8c5c3a5a',
+    appId: '1:673073877679:ios:9fca87abea4ae5035c3a5a',
     messagingSenderId: '673073877679',
     projectId: 'sciencehomeapp',
     storageBucket: 'sciencehomeapp.firebasestorage.app',
-    iosBundleId: 'com.mycompany.schoolhome',
+    iosBundleId: 'com.ns.sciencehome',
   );
+
 }
