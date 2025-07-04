@@ -258,24 +258,30 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                        _model.productList?.data?.productTitle??'',
-                             // 'Nike Sport Shoes',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 22.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                            Container(
+
+                              width: MediaQuery.of(context).size.width*0.60,
+                              child: Text(
+                                      _model.productList?.data?.productTitle??'',
+                               // "fsdfdfsdfsdfsdfsdfsdfdsfd sfdsfsdfsdfsdfsdfsdf sdfsdfsdfsdfsdfsdfsdfsdfsdf",
+                               maxLines: 5,
+                               // 'Nike Sport Shoes',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      fontSize: 22.0,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
 
                               children: [
                                 Text(
-                                 // '₹120',
+
                                   '₹${_model.productList?.data?.priceMsp.toString()??''}',
 
                                   style: FlutterFlowTheme.of(context)
@@ -371,7 +377,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                         padding: EdgeInsetsDirectional.fromSTEB(10.0,0.0, 10.0, 0.0),
                         child:   Text(
                           _model.productList?.data?.shortdetails??'',
-                          // 'Whether you\'re hitting the gym, running on the track, or playing your favorite sport, ',
+
                           style: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
@@ -443,7 +449,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                             Column(
                               children: [
                                 Text(
-                                  '₹${_model.productList?.data?.priceMrp.toString()??''}',
+                                  '₹${_model.productList?.data?.priceMsp.toString()??''}',
                                  //  '₹120',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium

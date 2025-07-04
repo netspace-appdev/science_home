@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:school_home/flutter_flow/backend/app_state.dart';
@@ -47,6 +49,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     _model.textFieldFocusNode ??= FocusNode();
     _model.textController?.addListener(_filterCategories);
     print('userID......${FFAppState().UserId}');
+
+    updateToken();
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('📥 Foreground Message: ${message.notification?.title}');
       // You can show a snackbar or local notification here
@@ -922,7 +927,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         call_add_to_cart(index);
                                                       }
                                                     },
-                                                    text: 'Add to card',
+                                                    text: 'Add to Cart',
                                                     icon: Icon(
                                                       Icons.shopping_cart_outlined,
                                                       size: 15,
@@ -1034,4 +1039,88 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         print("Error occurred: $e");
       }
     }
+
+  Future<String> getFCMToken() async {
+    try {
+      String? token = await FirebaseMessaging.instance.getToken();
+
+      return token ?? "";
+    } catch (e) {
+
+      return "";
+    }
+  }
+
+  Future<String> getDeviceId() async {
+    try {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+        return androidInfo.id ?? "no-id";
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+
+        return iosInfo.identifierForVendor ?? "no-id";
+      } else {
+        return "unsupported-platform";
+      }
+    } catch (e) {
+
+      return "unknown";
+    }
+  }
+  void updateToken()async {
+    String fcmToken = await getFCMToken();
+    String deviceId = await getDeviceId();
+    print("fcmToken===>${fcmToken}");
+    print("deviceId===>${deviceId}");
+    await firebaseTokenApi(
+      deviceId: deviceId.toString(),
+      deviceToken: fcmToken.toString(),
+    );
+
+  }
+
+  Future<void> firebaseTokenApi({
+    required String deviceToken,
+    required String deviceId,
+  }) async {
+    final url = Uri.parse(BaseURl.url + "firebase-token"); // 🔁 Use your actual endpoint here
+
+    final Map<String, String> body = {
+      "DeviceToken": deviceToken,
+      "Device_id": deviceId,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(body),
+      );
+
+      print("Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> resData = jsonDecode(response.body);
+        bool success = resData['success'];
+        String message = resData['message'];
+
+        if (success) {
+          print("Token saved successfully: $message");
+        } else {
+          print("Server responded but not successful: $message");
+        }
+      } else {
+        print("Failed to send token. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Exception occurred while sending token: $e");
+    }
+  }
+
 }
