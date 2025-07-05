@@ -212,7 +212,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                                                 maintainAnimation: false,
                                                 child: Text(
                                                   //'₹45 (-₹4.00 Tax)',
-                                                  '₹ ${_model.addToCartResponse?.data?[index]?.priceMrp.toString()??''}',
+                                                  '₹ ${_model.addToCartResponse?.data?[index]?.priceMsp.toString()??''}',
                                                   style: FlutterFlowTheme.of(context)
                                                       .bodyMedium
                                                       .override(
@@ -316,7 +316,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                                     itemBuilder: (context, index) {
                                       final item = _model.addToCartResponse?.data?[index];
                                       final quantity = int.tryParse(item?.quantity.toString() ?? '0') ?? 0;
-                                      final price = double.tryParse(item?.priceMrp.toString() ?? '0') ?? 0;
+                                      final price = double.tryParse(item?.priceMsp.toString() ?? '0') ?? 0;
                                       final total = price * quantity;
 
                                       return Padding(
@@ -399,6 +399,9 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                   child: InkWell(
                     onTap: () {
                       if ((_model.addToCartResponse?.data?.isNotEmpty ?? false)) {
+
+
+
                         _showBottomSheet(context, _model.addToCartResponse?.data, totalMrp);
                       }
                       //uncomment
@@ -536,11 +539,12 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
     final cartItems = _model.addToCartResponse?.data ?? [];
   totalMrp = cartItems.fold<double>(0.0, (sum, item) {
       final quantity = int.tryParse(item?.quantity.toString() ?? '0') ?? 0;
-      final price = double.tryParse(item?.priceMrp.toString() ?? '0') ?? 0;
+      final price = double.tryParse(item?.priceMsp.toString() ?? '0') ?? 0;
       return sum + (price * quantity);
     });
     setState(() {
     });
+    print("totalMrp=====>${totalMrp}");
     priceController.showPriceApi();
   }
 
@@ -668,7 +672,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
       },
     );
   }
-  void _showBottomSheet(BuildContext context, List<Data>? data, double totalMrpz) {
+  void _showBottomSheet(BuildContext context, List<Data>? data, double totalMrp) {
     showModalBottomSheet(
       isScrollControlled: true,  // Allows the bottom sheet to be scrollable with the keyboard
       backgroundColor: Colors.transparent,  // Transparent background for the bottom sheet

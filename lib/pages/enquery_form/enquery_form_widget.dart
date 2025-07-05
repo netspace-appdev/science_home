@@ -356,7 +356,7 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
         return {
           "product_name": item.title.toString(),
           "product_id": item.productId,
-          "product_price": item.priceMrp,
+          "product_price": int.parse(item.priceMsp.toString()??"0"),
           "quantity": item.quantity,
           "category_id": item.categoryId,
           "category_name": item.categoryname,

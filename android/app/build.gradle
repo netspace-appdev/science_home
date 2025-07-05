@@ -51,7 +51,7 @@ android {
         applicationId "com.ns.sciencehome"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 1
+        versionCode 3
         versionName "1.0.0"
     }
 

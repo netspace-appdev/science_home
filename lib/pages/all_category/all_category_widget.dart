@@ -103,7 +103,7 @@ class _AllCategoryWidgetState extends State<AllCategoryWidget> {
             ),
             actions:  [
               // Generated code for this Image Widget...
-              Padding(
+            /*  Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
@@ -116,6 +116,10 @@ class _AllCategoryWidgetState extends State<AllCategoryWidget> {
 
                   ),
                 ),
+              )*/
+              Container(
+                width: 45,
+                height: 45,
               )
             ],
             centerTitle: true,

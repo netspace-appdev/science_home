@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -59,17 +60,70 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('📥 Foreground Message: ${message.notification?.title}');
+      _showImageNotification(message);
       // You can show a snackbar or local notification here
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('🔁 App opened via notification tap');
+      _showImageNotification(message);
       // Navigate or show something specific
     });
     apiCallHomepages();
 
   }
+///noti image
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
+  Future<void> _showImageNotification(RemoteMessage message) async {
+    final String? title = message.data['title'];
+    final String? body = message.data['body'];
+    final String? imageUrl = message.data['image'];
+
+    BigPictureStyleInformation? styleInformation;
+
+    if (imageUrl != null && imageUrl.isNotEmpty) {
+      try {
+        final http.Response response = await http.get(Uri.parse(imageUrl));
+        if (response.statusCode == 200) {
+          final ByteArrayAndroidBitmap bigPicture =
+          ByteArrayAndroidBitmap.fromBase64String(
+            base64Encode(response.bodyBytes),
+          );
+
+          styleInformation = BigPictureStyleInformation(
+            bigPicture,
+            largeIcon: null,
+            contentTitle: title,
+            summaryText: body,
+          );
+        }
+      } catch (e) {
+        print("Failed to load image for notification: $e");
+      }
+    }
+
+    final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      channelDescription: 'your_channel_description',
+      importance: Importance.high,
+      priority: Priority.high,
+      styleInformation: styleInformation,
+    );
+
+    final NotificationDetails platformDetails =
+    NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformDetails,
+    );
+  }
+  ///end
 
   Future<void> checkAndRequestStoragePermission() async {
     final prefs = await SharedPreferences.getInstance();
@@ -206,7 +260,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             ),
             actions: [
               // Generated code for this Image Widget...
-              ClipRRect(
+             /* ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: SvgPicture.asset(
                   'assets/images/notification.svg',
@@ -215,6 +269,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   fit: BoxFit.none,
                   color: Colors.black,
                 ),
+              )*/
+              Container(
+                width: 45,
+                height: 45,
               )
             ],
             centerTitle: true,
@@ -913,7 +971,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                     MainAxisAlignment.start,
                                                     children: [
                                                       Text(
-                                                        '₹ ${filteredCategories?[index]?.priceMrp?.toString() ?? ""}',
+                                                        '₹ ${filteredCategories?[index]?.priceMsp?.toString() ?? ""}',
                                                         style: FlutterFlowTheme.of(
                                                             context)
                                                             .bodyMedium
@@ -930,7 +988,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                       ),
                                                       Text(
                                                         filteredCategories?[index]
-                                                            ?.priceMsp
+                                                            ?.priceMrp
                                                             ?.toString() ??
                                                             "",
                                                         style: FlutterFlowTheme.of(
