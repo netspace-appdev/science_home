@@ -1,12 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:school_home/cotroller/price_controller.dart';
 import 'package:school_home/flutter_flow/backend/app_state.dart';
 import 'package:school_home/pages/AllProduct/AllProductModel.dart';
 import 'package:school_home/pages/SlideBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../flutter_flow/backend/api_requests/api_calls.dart';
 import '../../flutter_flow/backend/api_requests/api_constants.dart';
 import '../constant.dart';
@@ -37,8 +42,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   List<ProductData> filteredCategories = [];
   int? index_val;
   List<int> counters = []; // List to store counters for each item
-
-
+  PriceController priceController=Get.put(PriceController());
+  int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -114,6 +119,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     });
     _model.isLoaderActive = true;
     print('userID......${FFAppState().UserId}');
+
+    priceController.showPriceApi();
     checkAndRequestStoragePermission();
     setState(() {});
   }
@@ -315,7 +322,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                   child: Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         10.0, 0.0, 10.0, 0.0),
-                                    child: Container(
+                                   /* child: Container(
                                       width: double.infinity,
                                       height: 350.0,
                                       child: Stack(
@@ -480,6 +487,64 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                           ),
                                         ],
                                       ),
+                                    ),*/
+
+                                    child:Column(
+                                      children: [
+                                        Container(
+
+                                          width: double.infinity,
+                                          //height: 350.0,
+                                          child: CarouselSlider.builder(
+                                            itemCount: _model.bannerModelResponse?.data?.length ?? 0,
+                                            itemBuilder: (BuildContext context, int index, int realIndex) {
+                                              final imageUrl = _model.bannerModelResponse?.data?[index].sliderImage;
+                                              return Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                  child: imageUrl != null
+                                                      ? Image.network(
+                                                    BaseURl.basUrl + imageUrl,
+                                                    width: double.infinity,
+                                                    height: 150.0,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                      : Image.asset(
+                                                    'assets/images/banner_img.png',
+                                                    width: double.infinity,
+                                                    height: 150.0,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            options: CarouselOptions(
+                                              height: 180,
+                                              autoPlay: true,
+                                              viewportFraction: 1.0,
+                                              enlargeCenterPage: false,
+                                              enableInfiniteScroll: true,
+                                              autoPlayAnimationDuration: Duration(milliseconds: 600),
+                                              autoPlayCurve: Curves.easeInOut,
+                                              scrollPhysics: BouncingScrollPhysics(),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 20,),
+                                        AnimatedSmoothIndicator(
+                                          activeIndex: _currentIndex,
+                                          count: _model.bannerModelResponse?.data?.length ?? 0,
+                                          effect: SlideEffect(
+                                            spacing: 8.0,
+                                            radius: 8.0,
+                                            dotWidth: 8.0,
+                                            dotHeight: 8.0,
+                                            dotColor: FlutterFlowTheme.of(context).accent1,
+                                            activeDotColor: FlutterFlowTheme.of(context).primary,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -676,6 +741,28 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             ],
                           ),
                         ),
+                        filteredCategories.isEmpty?
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                height: 120,
+                                width: MediaQuery.of(context).size.width,
+                                child: Lottie.asset(
+                                    'assets/lottie/search_glass.json',
+                                    repeat: false
+                                )),
+                            SizedBox(height: 20,),
+                            Text(
+                                "No Products Found",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                )),
+                          ],
+                        ):
+
                         ListView.builder(
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -815,50 +902,58 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                               FontWeight.w500,
                                                         ),
                                               ),
-                                              Row(
-                                                mainAxisAlignment:
+                                              Obx((){
+                                                return Visibility(
+                                                  visible: priceController.showPriceModel.value!.data![0].status==0?false:true,
+                                                  maintainState: false,
+                                                  maintainSize: false,
+                                                  maintainAnimation: false,
+                                                  child: Row(
+                                                    mainAxisAlignment:
                                                     MainAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    '₹ ${filteredCategories?[index]?.priceMrp?.toString() ?? ""}',
-                                                    style: FlutterFlowTheme.of(
+                                                    children: [
+                                                      Text(
+                                                        '₹ ${filteredCategories?[index]?.priceMrp?.toString() ?? ""}',
+                                                        style: FlutterFlowTheme.of(
                                                             context)
-                                                        .bodyMedium
-                                                        .override(
+                                                            .bodyMedium
+                                                            .override(
                                                             fontFamily: 'Inter',
                                                             color: FlutterFlowTheme
-                                                                    .of(context)
+                                                                .of(context)
                                                                 .secondaryText,
                                                             letterSpacing: 0.0,
                                                             fontSize: 14.0,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                  ),
-                                                  Text(
-                                                    filteredCategories?[index]
+                                                            FontWeight
+                                                                .w600),
+                                                      ),
+                                                      Text(
+                                                        filteredCategories?[index]
                                                             ?.priceMsp
                                                             ?.toString() ??
-                                                        "",
-                                                    style: FlutterFlowTheme.of(
+                                                            "",
+                                                        style: FlutterFlowTheme.of(
                                                             context)
-                                                        .bodyMedium
-                                                        .override(
+                                                            .bodyMedium
+                                                            .override(
                                                           fontFamily: 'Inter',
                                                           color: FlutterFlowTheme
-                                                                  .of(context)
+                                                              .of(context)
                                                               .secondaryText,
                                                           letterSpacing: 0.0,
                                                           fontSize: 14.0,
                                                           decoration:
-                                                              TextDecoration
-                                                                  .lineThrough,
+                                                          TextDecoration
+                                                              .lineThrough,
                                                         ),
+                                                      ),
+                                                    ].divide(SizedBox(
+                                                      width: 5,
+                                                    )),
                                                   ),
-                                                ].divide(SizedBox(
-                                                  width: 5,
-                                                )),
-                                              ),
+                                                );
+                                              }),
                                               Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:

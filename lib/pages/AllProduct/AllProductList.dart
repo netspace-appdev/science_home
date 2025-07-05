@@ -3,10 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:school_home/flutter_flow/flutter_flow_util.dart';
 import 'dart:math' as math; // Import math for pi
 
+import '../../cotroller/price_controller.dart';
 import '../../flutter_flow/backend/api_requests/api_calls.dart';
 import '../../flutter_flow/backend/api_requests/api_constants.dart';
 import '../../flutter_flow/backend/app_state.dart';
@@ -36,7 +40,7 @@ class _AllproductlistState extends State<Allproductlist> {
   late Allproductmodel _model;
   List<int> counters = []; // List to store counters for each item
   int? index_val;
-
+  PriceController priceController=Get.put(PriceController());
 
 
   @override
@@ -81,6 +85,7 @@ class _AllproductlistState extends State<Allproductlist> {
       setState(() {
 
 });
+      priceController.showPriceApi();
     }
 
 
@@ -160,7 +165,30 @@ class _AllproductlistState extends State<Allproductlist> {
             top: true,
             child:  _model.isLoaderActive == false ?
             Center(child: CircularProgressIndicator(color: FlutterFlowTheme.of(context).primary)):SingleChildScrollView(
-              child: ListView.builder(
+              child:
+              _model.productList!.data!.isEmpty?
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                      height: 120,
+                      width: MediaQuery.of(context).size.width,
+                      child: Lottie.asset(
+                          'assets/lottie/search_glass.json',
+                          repeat: false
+                      )),
+                  SizedBox(height: 20,),
+                  Text(
+                      "No Products Found",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      )),
+                ],
+              ):
+
+              ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 primary: false,
@@ -241,36 +269,46 @@ class _AllproductlistState extends State<Allproductlist> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '₹ ${ _model.productList?.data?[index]?.priceMrp?.toString() ??""}',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                              fontFamily: 'Inter',
-                                              color: FlutterFlowTheme.of(context).secondaryText,
-                                              letterSpacing: 0.0,
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w600
+                                    Obx((){
+                                      return Visibility(
+                                        visible: priceController.showPriceModel.value!.data![0].status==0?false:true,
+                                        maintainState: false,
+                                        maintainSize: false,
+                                        maintainAnimation: false,
+                                        child:  Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '₹ ${ _model.productList?.data?[index]?.priceMsp?.toString() ??""}',
+                                              style: FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .override(
+                                                  fontFamily: 'Inter',
+                                                  color: FlutterFlowTheme.of(context).secondaryText,
+                                                  letterSpacing: 0.0,
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.w600
 
-                                          ),
+                                              ),
+                                            ),
+                                            Text(
+                                              _model.productList?.data?[index]?.priceMrp?.toString() ??"",
+                                              style: FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .override(
+                                                fontFamily: 'Inter',
+                                                color: FlutterFlowTheme.of(context).secondaryText,
+                                                letterSpacing: 0.0,
+                                                fontSize: 14.0,
+                                                decoration: TextDecoration.lineThrough,
+                                              ),
+                                            ),
+                                          ].divide(SizedBox(width: 5,)),
                                         ),
-                                        Text(
-                                          _model.productList?.data?[index]?.priceMsp?.toString() ??"",
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                            fontFamily: 'Inter',
-                                            color: FlutterFlowTheme.of(context).secondaryText,
-                                            letterSpacing: 0.0,
-                                            fontSize: 14.0,
-                                            decoration: TextDecoration.lineThrough,
-                                          ),
-                                        ),
-                                      ].divide(SizedBox(width: 5,)),
-                                    ),
+                                      );
+                                    }),
+
+
                                     Row(
                                       mainAxisSize: MainAxisSize.max,
                                       mainAxisAlignment:

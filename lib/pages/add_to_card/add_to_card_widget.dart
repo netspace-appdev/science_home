@@ -2,6 +2,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,6 +12,7 @@ import 'package:school_home/flutter_flow/backend/app_state.dart';
 import 'package:school_home/pages/add_to_card/AddToCartResponse.dart';
 import 'package:school_home/pages/enquery_form/enquery_form_widget.dart';
 
+import '../../cotroller/price_controller.dart';
 import '../../flutter_flow/backend/api_requests/api_calls.dart';
 import '../../flutter_flow/backend/api_requests/api_constants.dart';
 import '../constant.dart';
@@ -35,7 +38,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   double totalMrp = 0.0;
-
+  PriceController priceController=Get.put(PriceController());
 
   @override
   void initState() {
@@ -201,18 +204,27 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                            Text(
-                                              //'₹45 (-₹4.00 Tax)',
-                                              '₹ ${_model.addToCartResponse?.data?[index]?.priceMrp.toString()??''}',
-                                              style: FlutterFlowTheme.of(context)
-                                                  .bodyMedium
-                                                  .override(
-                                                fontFamily: 'Inter',
-                                                color: FlutterFlowTheme.of(context)
-                                                    .secondaryText,
-                                                letterSpacing: 0.0,
-                                              ),
-                                            ),
+                                            Obx((){
+                                              return Visibility(
+                                                visible: priceController.showPriceModel.value!.data![0].status==0?false:true,
+                                                maintainState: false,
+                                                maintainSize: false,
+                                                maintainAnimation: false,
+                                                child: Text(
+                                                  //'₹45 (-₹4.00 Tax)',
+                                                  '₹ ${_model.addToCartResponse?.data?[index]?.priceMrp.toString()??''}',
+                                                  style: FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                    fontFamily: 'Inter',
+                                                    color: FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                    letterSpacing: 0.0,
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+
                                             Row(
                                               mainAxisSize: MainAxisSize.max,
                                               mainAxisAlignment:
@@ -273,101 +285,106 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
 
 
                           // Title
-                          Text(
-                            'Order Info',
-                            style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Inter',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
 
-// List of order items
-                          ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: _model.addToCartResponse?.data?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              final item = _model.addToCartResponse?.data?[index];
-                              final quantity = int.tryParse(item?.quantity.toString() ?? '0') ?? 0;
-                              final price = double.tryParse(item?.priceMrp.toString() ?? '0') ?? 0;
-                              final total = price * quantity;
 
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${item?.title ?? ''}',
-                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          Obx((){
+                            return Visibility(
+                              visible: priceController.showPriceModel.value!.data![0].status==0?false:true,
+                              maintainState: false,
+                              maintainSize: false,
+                              maintainAnimation: false,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Order Info',
+                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
                                         fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColor.red
                                     ),
-                                    Row(
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+
+                                  ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: _model.addToCartResponse?.data?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      final item = _model.addToCartResponse?.data?[index];
+                                      final quantity = int.tryParse(item?.quantity.toString() ?? '0') ?? 0;
+                                      final price = double.tryParse(item?.priceMrp.toString() ?? '0') ?? 0;
+                                      final total = price * quantity;
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${item?.title ?? ''}',
+                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.black54
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  '₹${price.toStringAsFixed(2)} x $quantity',
+                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                    fontFamily: 'Inter',
+                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '₹${total.toStringAsFixed(2)}',
+                                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(thickness: 0.5),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          '₹${price.toStringAsFixed(2)} x $quantity',
+                                          'Total',
                                           style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
-                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                         Text(
-                                          '₹${total.toStringAsFixed(2)}',
+                                          '₹${totalMrp.toStringAsFixed(2)}',
                                           style: FlutterFlowTheme.of(context).bodyMedium.override(
                                             fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Divider(thickness: 0.5),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-
-// Subtotal
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Total',
-                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Inter',
-                                    fontWeight: FontWeight.w600,
                                   ),
-                                ),
-                                Text(
-                                  '₹${totalMrp.toStringAsFixed(2)}',
-                                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Inter',
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-
-                         /* // Subtotal
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Subtotal'),
-                                Text('₹$totalMrp'),
-                              ],
-                            ),
-                          ),*/
+                                ],
+                              ),
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -524,7 +541,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
     });
     setState(() {
     });
-
+    priceController.showPriceApi();
   }
 
   void openAlertDialog() {

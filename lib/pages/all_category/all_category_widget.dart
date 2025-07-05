@@ -1,4 +1,5 @@
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:school_home/pages/AllProduct/AllProduct.dart';
 import 'package:school_home/pages/AllProduct/AllProductList.dart';
 
@@ -157,7 +158,33 @@ class _AllCategoryWidgetState extends State<AllCategoryWidget> {
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                    child: ListView.builder(
+
+
+                    child:
+                    _model.homepageresponse!.data!.isEmpty?
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                            height: 120,
+                            width: MediaQuery.of(context).size.width,
+                            child: Lottie.asset(
+                                'assets/lottie/search_glass.json',
+                                repeat: false
+                            )),
+                        SizedBox(height: 20,),
+                        Text(
+                            "No Category Found",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            )),
+                      ],
+                    ):
+
+
+                    ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,

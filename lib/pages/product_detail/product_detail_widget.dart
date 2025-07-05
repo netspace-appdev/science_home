@@ -1,5 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../../cotroller/price_controller.dart';
 import '../../flutter_flow/backend/api_requests/api_calls.dart';
 import '../../flutter_flow/backend/api_requests/api_constants.dart';
 import '../../flutter_flow/backend/app_state.dart';
@@ -29,7 +33,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late Timer _timer;
   int _currentPage = 0;
-
+  PriceController priceController=Get.put(PriceController());
   @override
   void initState() {
     super.initState();
@@ -69,7 +73,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
       );
     });
 
-
+    priceController.showPriceApi();
   }
   @override
   Widget build(BuildContext context) {
@@ -276,40 +280,49 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                                     ),
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            Obx((){
+                              return Visibility(
+                                visible: priceController.showPriceModel.value!.data![0].status==0?false:true,
+                                maintainState: false,
+                                maintainSize: false,
+                                maintainAnimation: false,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
 
-                              children: [
-                                Text(
+                                  children: [
+                                    Text(
 
-                                  '₹${_model.productList?.data?.priceMsp.toString()??''}',
+                                      '₹${_model.productList?.data?.priceMsp.toString()??''}',
 
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
                                         fontFamily: 'Inter',
                                         fontSize: 22.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
                                       ),
-                                ),
-                                Text(
-                                  // '₹120',
-                                  '₹${_model.productList?.data?.priceMrp.toString()??''}',
+                                    ),
+                                    Text(
+                                      // '₹120',
+                                      '₹${_model.productList?.data?.priceMrp.toString()??''}',
 
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.red,
-                                    fontSize: 14.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                        fontFamily: 'Inter',
+                                        color: Colors.red,
+                                        fontSize: 14.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              );
+                            }),
+
 
                           ].divide(SizedBox(width: 10.0)),
                         ),
@@ -415,70 +428,81 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(
                             10.0, 20.0, 10.0, 0.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
+                        child:
+                        Obx((){
+                          return Visibility(
+                            visible: priceController.showPriceModel.value!.data![0].status==0?false:true,
+                            maintainState: false,
+                            maintainSize: false,
+                            maintainAnimation: false,
+                            child: Row(
                               mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Total Price',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Text(
+                                      'Total Price',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
                                         fontFamily: 'Inter',
                                         fontSize: 15.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
                                       ),
-                                ),
-                                Text(
-                                  '',
-                                 // 'with VAT,SD',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
+                                    ),
+                                    Text(
+                                      '',
+                                      // 'with VAT,SD',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
                                         fontFamily: 'Inter',
                                         fontSize: 11.0,
                                         letterSpacing: 0.0,
                                       ),
+                                    ),
+                                  ].divide(SizedBox(height: 5.0)),
                                 ),
-                              ].divide(SizedBox(height: 5.0)),
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '₹${_model.productList?.data?.priceMsp.toString()??''}',
-                                 //  '₹120',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
+                                Column(
+                                  children: [
+                                    Text(
+                                      '₹${_model.productList?.data?.priceMsp.toString()??''}',
+                                      //  '₹120',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
                                         fontFamily: 'Inter',
                                         fontSize: 17.0,
                                         letterSpacing: 0.0,
                                         fontWeight: FontWeight.w600,
                                       ),
-                                ),
-                                Text(
-                                  // '₹120',
-                                  '₹${_model.productList?.data?.priceMrp.toString()??''}',
+                                    ),
+                                    Text(
+                                      // '₹120',
+                                      '₹${_model.productList?.data?.priceMrp.toString()??''}',
 
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.red,
-                                    fontSize: 12.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w600,
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                                ),
-                              ],
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                        fontFamily: 'Inter',
+                                        color: Colors.red,
+                                        fontSize: 12.0,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w600,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                  ],
+                                )
+
+                              ].divide(SizedBox(width: 10.0)),
                             ),
-                          ].divide(SizedBox(width: 10.0)),
-                        ),
+                          );
+                        }),
+
                       ),
                       Padding(
                         padding:
