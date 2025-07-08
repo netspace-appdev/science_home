@@ -397,15 +397,39 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                   right: 0,
                   bottom: 0,
                   child: InkWell(
-                    onTap: () {
-                      if ((_model.addToCartResponse?.data?.isNotEmpty ?? false)) {
+                    onTap: () async{
+                     /* if ((_model.addToCartResponse?.data?.isNotEmpty ?? false))  {
 
 
 
                         _showBottomSheet(context, _model.addToCartResponse?.data, totalMrp);
+                      }*/
+
+                      var status = await Permission.storage.status;
+
+                      // If permission is denied or restricted or limited, request it
+                      if (status.isDenied || status.isRestricted || status.isLimited || status.isPermanentlyDenied) {
+                        status = await Permission.storage.request();
                       }
-                      //uncomment
-                    //  downloadPDF("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
+
+                      if (status.isGranted) {
+                        if ((_model.addToCartResponse?.data?.isNotEmpty ?? false)) {
+                          _showBottomSheet(context, _model.addToCartResponse?.data, totalMrp);
+                        }
+                      } else if (status.isPermanentlyDenied) {
+                        // Permission permanently denied, guide user to settings
+                        bool opened = await openAppSettings();
+                        if (!opened) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please enable storage permission from settings to download the estimation.')),
+                          );
+                        }
+                      } else {
+                        // Denied but not permanently, maybe user hit "Deny" once
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Storage permission is required to download the estimation.')),
+                        );
+                      }
                     },
                     child: Container(
                       height: 75,
