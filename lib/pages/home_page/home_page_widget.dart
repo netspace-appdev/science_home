@@ -125,23 +125,60 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
   ///end
 
+
   Future<void> checkAndRequestStoragePermission() async {
     final prefs = await SharedPreferences.getInstance();
-    final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
-
+   /* final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
+    print("alreadyRequested===>${alreadyRequested}");
     if (alreadyRequested) {
-      print("Storage permission already granted or handled.");
+      print("✅ Storage permission already granted or handled.");
       return;
+    }*/
+
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+    final sdkInt = androidInfo.version.sdkInt;
+
+    PermissionStatus status;
+
+    if (Platform.isAndroid) {
+      // Android 13+ → manageExternalStorage or documents (if supported)
+      if (sdkInt >= 33) {
+        status = await Permission.manageExternalStorage.status;
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.manageExternalStorage.request();
+        }
+      }
+      // Android 11–12
+      else if (sdkInt >= 30) {
+        status = await Permission.manageExternalStorage.status;
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.manageExternalStorage.request();
+        }
+      }
+      // Android 6–10
+      else {
+        status = await Permission.storage.status;
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.storage.request();
+        }
+      }
+    } else {
+      // For iOS or other platforms
+      status = await Permission.photos.status;
+      if (status.isDenied || status.isRestricted) {
+        status = await Permission.photos.request();
+      }
     }
 
-    var status = await Permission.storage.request();
-    print("Permission status: $status");
+    // ✅ Handle outcomes
+    print("📂 Storage Permission Status: $status");
 
     if (status.isGranted) {
       await prefs.setBool('storage_permission_granted', true);
       ToastMessage.msg("Storage permission granted.");
-    }else if (status.isPermanentlyDenied) {
-      openAppSettings(); // from `permission_handler`
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings(); // Take user to settings
       ToastMessage.msg("Please enable storage permission from settings.");
     } else {
       ToastMessage.msg("Storage permission denied.");
@@ -175,7 +212,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     print('userID......${FFAppState().UserId}');
 
     priceController.showPriceApi();
-    checkAndRequestStoragePermission();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkAndRequestStoragePermission();
+    });
+
     setState(() {});
   }
 

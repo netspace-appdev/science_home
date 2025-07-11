@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -11,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:school_home/flutter_flow/backend/app_state.dart';
 import 'package:school_home/pages/add_to_card/AddToCartResponse.dart';
 import 'package:school_home/pages/enquery_form/enquery_form_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../cotroller/price_controller.dart';
 import '../../flutter_flow/backend/api_requests/api_calls.dart';
@@ -398,19 +400,11 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                   bottom: 0,
                   child: InkWell(
                     onTap: () async{
-                     /* if ((_model.addToCartResponse?.data?.isNotEmpty ?? false))  {
 
 
-
-                        _showBottomSheet(context, _model.addToCartResponse?.data, totalMrp);
-                      }*/
-
-                      var status = await Permission.storage.status;
-
-                      // If permission is denied or restricted or limited, request it
-                      if (status.isDenied || status.isRestricted || status.isLimited || status.isPermanentlyDenied) {
-                        status = await Permission.storage.request();
-                      }
+                      ///new code
+                      final status = await requestFilePermission();
+                      print("status===here==>${status}");
 
                       if (status.isGranted) {
                         if ((_model.addToCartResponse?.data?.isNotEmpty ?? false)) {
@@ -418,18 +412,46 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                         }
                       } else if (status.isPermanentlyDenied) {
                         // Permission permanently denied, guide user to settings
-                        bool opened = await openAppSettings();
+                        final opened = await openAppSettings();
                         if (!opened) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Please enable storage permission from settings to download the estimation.')),
+                            const SnackBar(
+                              content: Text('Please enable file access permission from settings to download the estimation.'),
+                            ),
                           );
                         }
                       } else {
-                        // Denied but not permanently, maybe user hit "Deny" once
+                        // Denied but not permanently
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Storage permission is required to download the estimation.')),
+                          const SnackBar(
+                            content: Text('File permission is required to download the estimation.'),
+                          ),
                         );
                       }
+                      /*final status = await requestFilePermission();
+                      if (status.isPermanentlyDenied || status.isDenied) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text("Permission Required"),
+                            content: Text("To save your estimation, please allow file access from Settings."),
+                            actions: [
+                              TextButton(
+                                child: Text("Open Settings"),
+                                onPressed: () {
+                                  openAppSettings();
+                                },
+                              ),
+                              TextButton(
+                                child: Text("Cancel"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }*/
                     },
                     child: Container(
                       height: 75,
@@ -728,5 +750,69 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
     });
   }
 
+  /// Ask for the right “file” permission depending on the OS / API level.
+  /// Returns the final PermissionStatus so you can check `.isGranted`.
+
+
+  Future<PermissionStatus> requestFilePermission() async {
+    final prefs = await SharedPreferences.getInstance();
+    final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
+
+    // ✅ Skip if already granted
+    if (alreadyRequested) {
+      print("✅ Storage permission already granted or handled.");
+      return PermissionStatus.granted;
+    }
+
+    final deviceInfo = DeviceInfoPlugin();
+    PermissionStatus status;
+
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      final sdkInt = androidInfo.version.sdkInt;
+
+      // 🔒 Android 13+ (SDK 33+)
+      if (sdkInt >= 33) {
+        status = await Permission.manageExternalStorage.status;
+
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.manageExternalStorage.request();
+        }
+      }
+      // 📁 Android 11 & 12 (SDK 30–32)
+      else if (sdkInt >= 30) {
+        status = await Permission.manageExternalStorage.status;
+
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.manageExternalStorage.request();
+        }
+      }
+      // 📂 Android 6–10 (SDK 23–29)
+      else {
+        status = await Permission.storage.status;
+
+        if (status.isDenied || status.isRestricted || status.isLimited || status.isPermanentlyDenied) {
+          status = await Permission.storage.request();
+        }
+      }
+    } else {
+      // 🍎 iOS — not usually needed but here for completeness
+      status = await Permission.photos.status;
+
+      if (status.isDenied || status.isRestricted) {
+        status = await Permission.photos.request();
+      }
+    }
+
+    // ✅ Save granted status for next time
+    if (status.isGranted) {
+      await prefs.setBool('storage_permission_granted', true);
+      print("✅ Storage permission granted and saved.");
+    } else {
+      print("❌ Storage permission denied: $status");
+    }
+
+    return status;
+  }
 
 }
