@@ -52,7 +52,7 @@ android {
         applicationId "com.ns.sciencehome"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 5
+        versionCode 7
         versionName "1.0.0"
     }
 
@@ -69,7 +69,7 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release //release
         }
     }
 

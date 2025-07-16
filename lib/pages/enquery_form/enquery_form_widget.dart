@@ -425,63 +425,6 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
   }
 
 
-/*  Future<void> downloadPDF(String url, String estId) async {
-    print("📥 Starting PDF download...");
-
-    try {
-      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      PermissionStatus status;
-
-      // 🔐 Request appropriate permissions based on Android version
-      if (androidInfo.version.sdkInt >= 33) {
-        // Android 13+ requires media-specific permissions
-        status = await Permission.mediaLibrary.request(); // Optional
-        status = await Permission.photos.request(); // Works for PDF/media files
-      } else {
-        status = await Permission.storage.request();
-      }
-
-      if (!status.isGranted) {
-        print("❌ Permission denied");
-        ToastMessage.msg("Storage permission denied!");
-        return;
-      }
-
-      // 📁 Determine the best directory
-      Directory? directory;
-
-      if (Platform.isAndroid) {
-        directory = Directory("/storage/emulated/0/Download");
-
-        if (!await directory.exists()) {
-          print("⚠️ Downloads not available. Using app directory.");
-          directory = await getExternalStorageDirectory();
-        }
-      } else {
-        directory = await getApplicationDocumentsDirectory();
-      }
-
-      if (directory == null) {
-        throw Exception("❌ Unable to find a valid directory to save the file.");
-      }
-
-      final filePath = "${directory.path}/$estId.pdf";
-
-      print("📍 Saving to: $filePath");
-
-      Dio dio = Dio();
-      await dio.download(url, filePath);
-
-      print("✅ PDF downloaded!");
-      ToastMessage.msg("PDF downloaded successfully!");
-
-      await OpenFile.open(filePath);
-    } catch (e) {
-      print("💥 Download error: $e");
-      ToastMessage.msg("Failed to download PDF");
-    }
-  }*/
 
   Future<void> downloadPDF(String url, String estId) async {
     print("📥 Starting PDF download...");
@@ -492,53 +435,7 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
       final androidInfo = await deviceInfo.androidInfo;
       final sdkInt = androidInfo.version.sdkInt;
 
-/*      PermissionStatus status;
 
-      if (Platform.isAndroid) {
-        // Android 13+ (SDK 33+)
-        if (sdkInt >= 33) {
-          status = await Permission.manageExternalStorage.status;
-          if (status.isDenied || status.isRestricted || status.isLimited) {
-            status = await Permission.manageExternalStorage.request();
-          }
-        }
-        // Android 11–12
-        else if (sdkInt >= 30) {
-          status = await Permission.manageExternalStorage.status;
-          if (status.isDenied || status.isRestricted || status.isLimited) {
-            status = await Permission.manageExternalStorage.request();
-          }
-        }
-        // Android 6–10
-        else {
-          status = await Permission.storage.status;
-          if (status.isDenied || status.isRestricted || status.isLimited || status.isPermanentlyDenied) {
-            status = await Permission.storage.request();
-          }
-        }
-      } else {
-        // iOS or other platforms
-        status = await Permission.photos.status;
-        if (status.isDenied || status.isRestricted) {
-          status = await Permission.photos.request();
-        }
-      }
-
-      // ✅ Check permission result
-      print("📂 Storage Permission Status: $status");
-
-      if (!status.isGranted) {
-        if (status.isPermanentlyDenied) {
-          openAppSettings();
-          ToastMessage.msg("Please enable storage permission from settings.");
-        } else {
-          ToastMessage.msg("Storage permission denied!");
-        }
-        return;
-      }
-
-      // ✅ Save status
-      await prefs.setBool('storage_permission_granted', true);*/
 
       // 📁 Get target directory
       Directory? directory;

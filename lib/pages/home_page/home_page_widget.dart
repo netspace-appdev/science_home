@@ -128,12 +128,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   Future<void> checkAndRequestStoragePermission() async {
     final prefs = await SharedPreferences.getInstance();
-   /* final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
-    print("alreadyRequested===>${alreadyRequested}");
-    if (alreadyRequested) {
-      print("✅ Storage permission already granted or handled.");
-      return;
-    }*/
 
     final deviceInfo = DeviceInfoPlugin();
     final androidInfo = await deviceInfo.androidInfo;
