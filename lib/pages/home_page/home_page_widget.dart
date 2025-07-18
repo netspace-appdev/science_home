@@ -129,7 +129,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   ///working code
 
-  /*Future<void> checkAndRequestStoragePermission() async {
+/*
+  Future<void> checkAndRequestStoragePermission() async {
     final prefs = await SharedPreferences.getInstance();
 
     final deviceInfo = DeviceInfoPlugin();
@@ -180,9 +181,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     } else {
       ToastMessage.msg("Storage permission denied.");
     }
-  }*/
+  }
+*/
 
   ///experiment for making app live
+/*
   Future<void> checkAndRequestStoragePermission() async {
     final prefs = await SharedPreferences.getInstance();
     final deviceInfo = DeviceInfoPlugin();
@@ -227,6 +230,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       ToastMessage.msg("Storage permission denied.");
     }
   }
+*/
 
 
 
@@ -258,9 +262,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     print('userID......${FFAppState().UserId}');
 
     priceController.showPriceApi();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkAndRequestStoragePermission();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   checkAndRequestStoragePermission();
+    // });
 
     setState(() {});
   }

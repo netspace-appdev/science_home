@@ -16,6 +16,7 @@ import 'package:school_home/pages/add_to_card/AddToCartResponse.dart';
 import 'package:http/http.dart' as http;
 import 'package:school_home/pages/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../flutter_flow/backend/api_requests/api_constants.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import 'dart:io';
@@ -428,10 +429,19 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
 
   ///working code
 
-/*  Future<void> downloadPDF(String url, String estId) async {
+  Future<void> downloadPDF(String url, String estId) async {
     print("📥 Starting PDF download...");
 
-    try {
+    final Uri uri = Uri.parse(url);
+
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication, // Opens in Chrome or browser
+    )) {
+      throw 'Could not launch $url';
+    }
+
+  /*  try {
       final prefs = await SharedPreferences.getInstance();
       final deviceInfo = DeviceInfoPlugin();
       final androidInfo = await deviceInfo.androidInfo;
@@ -470,10 +480,11 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
     } catch (e) {
       print("💥 Download error: $e");
       ToastMessage.msg("Failed to download PDF");
-    }
-  }*/
+    }*/
+  }
 
 ///Experiment for making app live
+/*
   Future<void> downloadPDF(String url, String fileName) async {
     try {
       final dio = Dio();
@@ -503,6 +514,7 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
       ToastMessage.msg("Failed to download PDF");
     }
   }
+*/
 
 
 

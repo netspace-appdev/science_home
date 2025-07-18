@@ -403,31 +403,33 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
 
 
                       ///new code
-                      final status = await requestFilePermission();
-                      print("status===here==>${status}");
+                    //  final status = await requestFilePermission();
+                     // print("status===here==>${status}");
 
-                      if (status.isGranted) {
+                    //  if (status.isGranted) {
                         if ((_model.addToCartResponse?.data?.isNotEmpty ?? false)) {
                           _showBottomSheet(context, _model.addToCartResponse?.data, totalMrp);
-                        }
-                      } else if (status.isPermanentlyDenied) {
-                        // Permission permanently denied, guide user to settings
-                        final opened = await openAppSettings();
-                        if (!opened) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please enable file access permission from settings to download the estimation.'),
-                            ),
-                          );
-                        }
-                      } else {
-                        // Denied but not permanently
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('File permission is required to download the estimation.'),
-                          ),
-                        );
+                     //   }
                       }
+                        //else if (status.isPermanentlyDenied) {
+                        // Permission permanently denied, guide user to settings
+                       // final opened = await openAppSettings();
+                     //    if (!opened) {
+                     //      ScaffoldMessenger.of(context).showSnackBar(
+                     //        const SnackBar(
+                     //          content: Text('Please enable file access permission from settings to download the estimation.'),
+                     //        ),
+                     //      );
+                     // //   }
+                     //  }
+                     //    else {
+                     //    // Denied but not permanently
+                     //    ScaffoldMessenger.of(context).showSnackBar(
+                     //      const SnackBar(
+                     //        content: Text('File permission is required to download the estimation.'),
+                     //      ),
+                     //    );
+                     //  }
                       /*final status = await requestFilePermission();
                       if (status.isPermanentlyDenied || status.isDenied) {
                         showDialog(
@@ -754,7 +756,8 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
   /// Returns the final PermissionStatus so you can check `.isGranted`.
 
 ///old working code
-  /*Future<PermissionStatus> requestFilePermission() async {
+  ///
+  Future<PermissionStatus> requestFilePermission() async {
     final prefs = await SharedPreferences.getInstance();
     final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
 
@@ -813,9 +816,10 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
     }
 
     return status;
-  }*/
+  }
 
 ///new code for making app live
+/*
   Future<PermissionStatus> requestFilePermission() async {
     final prefs = await SharedPreferences.getInstance();
     final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
@@ -833,41 +837,55 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
 
     if (Platform.isAndroid) {
       if (sdkInt >= 33) {
-        // Android 13+ prefers media permissions
-        status = await Permission.photos.status; // Can also use Permission.videos, etc. depending on needs
-        if (status.isDenied || status.isRestricted) {
-          status = await Permission.photos.request();
+        // Android 13+ (SDK 33+) — scoped storage enforced
+        // PDF is not a media file => don't use Permission.photos
+        // Optionally: Use SAF instead of requesting permission
+
+        // Check if you really need MANAGE_EXTERNAL_STORAGE
+        status = await Permission.manageExternalStorage.status;
+
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.manageExternalStorage.request();
         }
+
       } else if (sdkInt >= 30) {
-        // Android 11-12
-        status = await Permission.storage.status;
-        if (status.isDenied || status.isRestricted) {
-          status = await Permission.storage.request();
+        // Android 11–12 (Scoped Storage still applies, but MANAGE_EXTERNAL_STORAGE allowed if declared)
+        status = await Permission.manageExternalStorage.status;
+
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.manageExternalStorage.request();
         }
       } else {
-        // Android 6-10
+        // Android 6–10
         status = await Permission.storage.status;
-        if (status.isDenied || status.isRestricted) {
+
+        if (status.isDenied || status.isRestricted || status.isLimited) {
           status = await Permission.storage.request();
         }
       }
     } else {
-      // iOS
+      // iOS — Photos access is usually enough for media, PDFs require SAF-style access
       status = await Permission.photos.status;
+
       if (status.isDenied || status.isRestricted) {
         status = await Permission.photos.request();
       }
     }
 
+    // Save result
     if (status.isGranted) {
       await prefs.setBool('storage_permission_granted', true);
       print("✅ Storage permission granted and saved.");
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+      print("⚠️ Permission permanently denied. Prompting user to open settings.");
     } else {
       print("❌ Storage permission denied: $status");
     }
 
     return status;
   }
+*/
 
 
 }
