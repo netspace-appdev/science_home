@@ -126,7 +126,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   ///end
 
 
-  Future<void> checkAndRequestStoragePermission() async {
+
+  ///working code
+
+  /*Future<void> checkAndRequestStoragePermission() async {
     final prefs = await SharedPreferences.getInstance();
 
     final deviceInfo = DeviceInfoPlugin();
@@ -177,7 +180,56 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     } else {
       ToastMessage.msg("Storage permission denied.");
     }
+  }*/
+
+  ///experiment for making app live
+  Future<void> checkAndRequestStoragePermission() async {
+    final prefs = await SharedPreferences.getInstance();
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+    final sdkInt = androidInfo.version.sdkInt;
+
+    PermissionStatus status;
+
+    if (Platform.isAndroid) {
+      if (sdkInt >= 33) {
+        status = await Permission.photos.status;
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.photos.request();
+        }
+      } else if (sdkInt >= 30) {
+        status = await Permission.storage.status;
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.storage.request();
+        }
+      } else {
+        status = await Permission.storage.status;
+        if (status.isDenied || status.isRestricted || status.isLimited) {
+          status = await Permission.storage.request();
+        }
+      }
+    } else {
+      status = await Permission.photos.status;
+      if (status.isDenied || status.isRestricted) {
+        status = await Permission.photos.request();
+      }
+    }
+
+    print("📂 Storage Permission Status: $status");
+
+    if (status.isGranted) {
+      await prefs.setBool('storage_permission_granted', true);
+      ToastMessage.msg("Storage permission granted.");
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+      ToastMessage.msg("Please enable storage permission from settings.");
+    } else {
+      ToastMessage.msg("Storage permission denied.");
+    }
   }
+
+
+
 
   // Method to filter categories based on input
   void _filterCategories() {

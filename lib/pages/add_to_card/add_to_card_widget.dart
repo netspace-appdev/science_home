@@ -753,8 +753,8 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
   /// Ask for the right “file” permission depending on the OS / API level.
   /// Returns the final PermissionStatus so you can check `.isGranted`.
 
-
-  Future<PermissionStatus> requestFilePermission() async {
+///old working code
+  /*Future<PermissionStatus> requestFilePermission() async {
     final prefs = await SharedPreferences.getInstance();
     final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
 
@@ -813,6 +813,61 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
     }
 
     return status;
+  }*/
+
+///new code for making app live
+  Future<PermissionStatus> requestFilePermission() async {
+    final prefs = await SharedPreferences.getInstance();
+    final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
+
+    if (alreadyRequested) {
+      print("✅ Storage permission already granted or handled.");
+      return PermissionStatus.granted;
+    }
+
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+    final sdkInt = androidInfo.version.sdkInt;
+
+    PermissionStatus status;
+
+    if (Platform.isAndroid) {
+      if (sdkInt >= 33) {
+        // Android 13+ prefers media permissions
+        status = await Permission.photos.status; // Can also use Permission.videos, etc. depending on needs
+        if (status.isDenied || status.isRestricted) {
+          status = await Permission.photos.request();
+        }
+      } else if (sdkInt >= 30) {
+        // Android 11-12
+        status = await Permission.storage.status;
+        if (status.isDenied || status.isRestricted) {
+          status = await Permission.storage.request();
+        }
+      } else {
+        // Android 6-10
+        status = await Permission.storage.status;
+        if (status.isDenied || status.isRestricted) {
+          status = await Permission.storage.request();
+        }
+      }
+    } else {
+      // iOS
+      status = await Permission.photos.status;
+      if (status.isDenied || status.isRestricted) {
+        status = await Permission.photos.request();
+      }
+    }
+
+    if (status.isGranted) {
+      await prefs.setBool('storage_permission_granted', true);
+      print("✅ Storage permission granted and saved.");
+    } else {
+      print("❌ Storage permission denied: $status");
+    }
+
+    return status;
   }
+
 
 }

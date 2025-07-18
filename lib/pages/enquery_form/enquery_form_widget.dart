@@ -426,7 +426,9 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
 
 
 
-  Future<void> downloadPDF(String url, String estId) async {
+  ///working code
+
+/*  Future<void> downloadPDF(String url, String estId) async {
     print("📥 Starting PDF download...");
 
     try {
@@ -469,8 +471,38 @@ class _EnquiryFormDialogState extends State<EnquiryFormDialog> {
       print("💥 Download error: $e");
       ToastMessage.msg("Failed to download PDF");
     }
-  }
+  }*/
 
+///Experiment for making app live
+  Future<void> downloadPDF(String url, String fileName) async {
+    try {
+      final dio = Dio();
+      final response = await dio.get<List<int>>(url, options: Options(responseType: ResponseType.bytes));
+      final bytes = Uint8List.fromList(response.data!);
+
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      final sdkInt = deviceInfo.version.sdkInt;
+
+      if (Platform.isAndroid && sdkInt >= 29) {
+        // Android 10+ → use MediaStore
+        final downloadsDir = await getExternalStorageDirectory();
+        final file = File('${downloadsDir!.path}/$fileName.pdf');
+        await file.writeAsBytes(bytes);
+        ToastMessage.msg("PDF downloaded successfully.");
+        await OpenFile.open(file.path);
+      } else {
+        // Android 9 or lower fallback
+        final directory = Directory("/storage/emulated/0/Download");
+        final file = File('${directory.path}/$fileName.pdf');
+        await file.writeAsBytes(bytes);
+        ToastMessage.msg("PDF downloaded successfully.");
+        await OpenFile.open(file.path);
+      }
+    } catch (e) {
+      print("💥 Download error: $e");
+      ToastMessage.msg("Failed to download PDF");
+    }
+  }
 
 
 
