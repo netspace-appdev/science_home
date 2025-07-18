@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
-import 'package:open_file/open_file.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:school_home/flutter_flow/backend/app_state.dart';
@@ -483,44 +483,10 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
       ),
     );
   }
+
+
+
 /*  Future<void> downloadPDF(String url) async {
-    print("downloadPDF==>");
-    try {
-      // Request storage permission
-      var status = await Permission.storage.request();
-
-      print("status==>${status}");
-      if (!status.isGranted) {
-        print("Storage permission denied");
-        return;
-      }
-
-      // Get download directory
-      Directory? directory;
-      if (Platform.isAndroid) {
-        directory = await getExternalStorageDirectory();
-      } else {
-        directory = await getApplicationDocumentsDirectory();
-      }
-
-      final filePath = "${directory!.path}/receipt.pdf";
-
-      Dio dio = Dio();
-      await dio.download(url, filePath);
-
-      print("PDF downloaded to: $filePath");
-      OpenFile.open(filePath);
-      // Optionally show a snackbar or toast
-      ToastMessage.msg("PDF downloaded successfully!");
-
-    } catch (e) {
-      print("Download error: $e");
-      ToastMessage.msg("Failed to download PDF");
-    }
-  }*/
-
-
-  Future<void> downloadPDF(String url) async {
     print("downloadPDF==>");
     try {
       // Request storage permission
@@ -565,7 +531,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
       print("Download error: $e");
       ToastMessage.msg("Failed to download PDF");
     }
-  }
+  }*/
 
 
 
@@ -757,7 +723,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
 
 ///old working code
   ///
-  Future<PermissionStatus> requestFilePermission() async {
+/*  Future<PermissionStatus> requestFilePermission() async {
     final prefs = await SharedPreferences.getInstance();
     final alreadyRequested = prefs.getBool('storage_permission_granted') ?? false;
 
@@ -816,7 +782,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
     }
 
     return status;
-  }
+  }*/
 
 ///new code for making app live
 /*
